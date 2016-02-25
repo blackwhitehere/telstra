@@ -23,7 +23,7 @@ def empty_join(datasets):
 
 
 def cat_join():
-    _,datasets = get_datasets()
+    datasets = get_datasets()
 
     notCat = ['id', 'volume']
     cat_cols = get_cat_cols()
@@ -64,14 +64,13 @@ def get_datasets():
     feature = pd.read_csv(filepath_or_buffer=path + logFeatureFile, delimiter=",", header=0)
     severity = pd.read_csv(filepath_or_buffer=path + severityTypeFile, delimiter=",", header=0)
 
-    samples=['train','test']
     datasets = {'train': train, 'test': test, 'resource_type': resource, 'event_type': event, 'log_feature': feature,
                 'severity_type': severity}
-    return samples, datasets
+    return datasets
 
 def get_prior_features(join):
     cat_cols=get_cat_cols()
-    samples, ds=get_datasets()
+    ds=get_datasets()
 
     prior_col_names=['rt_f1','rt_f2','et_f1','et_f2','lf_f1','lf_f2','lf_f3','lf_f4','volume_y']
     for cat in cat_cols:
@@ -204,3 +203,4 @@ def get_stats_features(join):
             stats[column]=pre.scale(stats[column])
 
     return stats
+

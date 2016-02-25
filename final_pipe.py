@@ -18,7 +18,7 @@ datasets['priors']=priors
 
 #convert tables of categorical classes to binary row feature vectors for each unique id. Continuous factors are not affected
 for key, dataset in datasets.items():
-    if key is not in ['stats','priors']:
+    if key not in ['stats','priors']:
         tmp=pd.get_dummies(dataset,dummy_na=True)
         tmp=tmp.groupby('id').sum()
         tmp['id']=tmp.index
@@ -37,18 +37,7 @@ join=pd.get_dummies(join) #fixes dummies for location
 
 #TODO: TRY REMOVING ROWS WITH MISSING DATA
 #fills in missing data
-from sklearn.base import TransformerMixin
-class DataFrameImputer(TransformerMixin):
-    def fit(self, X, y=None):
-        self.fill = pd.Series([X[c].value_counts().index[0]
-            if X[c].dtype == np.dtype('O') else X[c].median() for c in X],
-            index=X.columns)
-        return self
-    def transform(self, X, y=None):
-        return X.fillna(self.fill)
-
-join = DataFrameImputer().fit_transform(join)
-#join=join.fillna(value=0)
+join=join.fillna(value=0)
 
 #creates features and targets for final training
 features=join.columns.values.tolist()
@@ -74,25 +63,19 @@ sz=(train_features.values).shape
 
 train_X = train_features.values[:int(sz[0] * 0.7), :]
 train_Y = train_target.values[:int(sz[0]*0.7)]
-#wtr = join.loc['train']['sum'].values[:int(sz[0]*0.7)]
-
 
 test_X = train_features.values[int(sz[0] * 0.7):, :]
 test_Y = train_target.values[int(sz[0] * 0.7):]
-#wte = join.loc['train']['sum'].values[int(sz[0] * 0.7):]
 
 xg_train = xgb.DMatrix(train_X, label=train_Y,feature_names=train_features.columns) #
-#xg_train.set_weight(wtr)
 full_xg_train = xgb.DMatrix(train_features, label=train_target.values,feature_names=train_features.columns) #
 
 xg_test = xgb.DMatrix(test_X, label=test_Y,feature_names=test_features.columns) #
-#xg_test.set_weight(wte)
 full_xg_test = xgb.DMatrix(test_features,feature_names=test_features.columns) #
 
 #TRAIN
 # setup parameters for xgboost
 param = {}
-# use softmax multi-class classification
 param['objective'] = 'multi:softprob'
 param['eta'] = 1
 param['gamma']= 4
@@ -106,22 +89,22 @@ param['nthread'] = 3
 param['num_class'] = 3
 param['eval_metric']='mlogloss'
 
-watchlist = [ (xg_train,'train'), (xg_test, 'test') ]
-num_round = 4
-bst = xgb.train(param, xg_train,num_round,evals=watchlist);
-# get prediction
-pred = bst.predict( xg_test );
 
-xgb.cv(param, xg_train, num_round, nfold=3,
-       metrics=['mlogloss'], seed = 0)
+
+watchlist = [(xg_train,'train'), (xg_test, 'test')]
+num_round = 4
+bst = xgb.train(param, xg_train, num_round, evals=watchlist);
+
+print(xgb.cv(param, xg_train, num_round, nfold=3, metrics=['mlogloss'], seed=0))
 
 xgb.plot_importance(booster=bst)
 plt.show()
 
-bst=xgb.train(param, full_xg_train, num_round,evals=watchlist)
+bst=xgb.train(param, full_xg_train, num_round, evals=watchlist)
 test_response=bst.predict(full_xg_test)
-xgb.cv(param, xg_train, num_round, nfold=3,
-       metrics=['mlogloss'], seed = 0)
+print(xgb.cv(param, xg_train, num_round, nfold=3, metrics=['mlogloss'], seed = 0))
+
+
 
 #save predictions to required format
 out=pd.DataFrame({'id':[],'predict_0':[],'predict_1':[],'predict_2':[]})
