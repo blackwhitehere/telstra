@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='utf-8'?>
+<scheme description="" title="telstra" version="2.0">
+	<nodes>
+		<node id="0" name="File" position="(150, 150)" project_name="Orange" qualified_name="Orange.widgets.data.owfile.OWFile" title="File" version="" />
+		<node id="1" name="Random Forest Classification" position="(419.0, 173.0)" project_name="Orange" qualified_name="Orange.widgets.classify.owrandomforest.OWRandomForest" title="Random Forest Classification" version="" />
+		<node id="2" name="Edit Domain" position="(88.0, 311.0)" project_name="Orange" qualified_name="Orange.widgets.data.oweditdomain.OWEditDomain" title="Edit Domain" version="" />
+	</nodes>
+	<links>
+		<link enabled="true" id="0" sink_channel="Data" sink_node_id="1" source_channel="Data" source_node_id="0" />
+		<link enabled="true" id="1" sink_channel="Data" sink_node_id="2" source_channel="Data" source_node_id="0" />
+	</links>
+	<annotations />
+	<thumbnail />
+	<node_properties>
+		<properties format="pickle" node_id="0">gAN9cQAoWAsAAAByZWNlbnRfdXJsc3EBXXECWAwAAAByZWNlbnRfcGF0aHNxA11xBGNPcmFuZ2Uu
+d2lkZ2V0cy5kYXRhLm93ZmlsZQpSZWNlbnRQYXRoCnEFKYFxBn1xByhYBwAAAGFic3BhdGhxCFgX
+AAAAQzovZGV2L3RlbHN0cmEvam9pbi5jc3ZxCVgHAAAAcmVscGF0aHEKTlgFAAAAdGl0bGVxC1gA
+AAAAcQxYBgAAAHByZWZpeHENTnViYVgTAAAAc2F2ZWRXaWRnZXRHZW9tZXRyeXEOY3NpcApfdW5w
+aWNrbGVfdHlwZQpxD1gMAAAAUHlRdDQuUXRDb3JlcRBYCgAAAFFCeXRlQXJyYXlxEUMuAdnQywAB
+AAAAAAFuAAABFQAAA1IAAAH0AAABcQAAAS8AAANPAAAB8QAAAAAAAHEShXETh3EUUnEVWAMAAAB1
+cmxxFmgMWAYAAABzb3VyY2VxF0sAdS4=
+</properties>
+		<properties format="literal" node_id="1">{'savedWidgetGeometry': None, 'max_leaf_nodes': 5, 'random_state': 0, 'max_features': 5, 'use_max_leaf_nodes': True, 'use_max_depth': False, 'learner_name': 'RF Classification Learner', 'n_estimators': 10, 'index_output': 0, 'max_depth': 3, 'use_max_features': False, 'use_random_state': False}</properties>
+		<properties format="pickle" node_id="2">gAN9cQAoWBMAAABzYXZlZFdpZGdldEdlb21ldHJ5cQFjc2lwCl91bnBpY2tsZV90eXBlCnECWAwA
+AABQeVF0NC5RdENvcmVxA1gKAAAAUUJ5dGVBcnJheXEEQy4B2dDLAAEAAAAAAScAAAB0AAADmAAA
+ApQAAAEvAAAAkwAAA5AAAAKMAAAAAAAAcQWFcQaHcQdScQhYEAAAAGNvbnRleHRfc2V0dGluZ3Nx
+CV1xCmNPcmFuZ2Uud2lkZ2V0cy5zZXR0aW5ncwpDb250ZXh0CnELKYFxDH1xDShYDgAAAG9yZGVy
+ZWRfZG9tYWlucQ5dcQ8oWAkAAABGZWF0dXJlIDFxEEsChnERWA4AAABmYXVsdF9zZXZlcml0eXES
+SwKGcRNYAgAAAGlkcRRLAoZxFVgIAAAAbG9jYXRpb25xFksBhnEXWAYAAABzYW1wbGVxGEsBhnEZ
+WAsAAABsb2dfZmVhdHVyZXEaSwGGcRtYBgAAAHZvbHVtZXEcSwKGcR1YDQAAAHNldmVyaXR5X3R5
+cGVxHksBhnEfWA0AAAByZXNvdXJjZV90eXBlcSBLAYZxIVgKAAAAZXZlbnRfdHlwZXEiSwGGcSNl
+WAoAAABhdHRyaWJ1dGVzcSR9cSUoaCBLAWgcSwJoFksBaCJLAWgSSwJoGksBaBRLAmgQSwJoGEsB
+aB5LAXVYBQAAAG1ldGFzcSZ9cSdYBgAAAHZhbHVlc3EofXEpKFgTAAAAZG9tYWluX2NoYW5nZV9o
+aW50c3EqfXErSv7///+GcSxoAWgCaANYCgAAAFFCeXRlQXJyYXlxLUMuAdnQywABAAAAAAEnAAAA
+dAAAA5gAAAKUAAABLwAAAJMAAAOQAAACjAAAAAAAAHEuhXEvh3EwUnExSv7///+GcTJYDgAAAHNl
+bGVjdGVkX2luZGV4cTNLAUr+////hnE0WAoAAABhdXRvY29tbWl0cTWJSv7///+GcTZ1WAQAAAB0
+aW1lcTdHQdWzmVrH5211YmFoNYl1Lg==
+</properties>
+	</node_properties>
+</scheme>
