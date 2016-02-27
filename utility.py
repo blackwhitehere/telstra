@@ -4,8 +4,8 @@ import matplotlib as plt
 import numpy as np
 from sklearn import preprocessing as pre
 
-def draw_ct(join, colName):
-    df = pd.crosstab(join[colName], join['fault_severity'])
+def draw_ct(join, colName1, colName2):
+    df = pd.crosstab(join[colName1], join[colName2])
     ndf = df.div(df.sum(1).astype(float), axis=0)
 
     # Normalize the cross tab to sum to 1:
@@ -35,7 +35,7 @@ def cat_join():
     datasets['test']['fault_severity'] = np.nan
     join = pd.concat([datasets['train'], datasets['test']], ignore_index=True)
 
-    datasets['log_feature']['volume'] = pd.cut(datasets['log_feature']['volume'], bins=[0, 1, 2, 7, 1310], labels=[1, 2, 3, 4]).astype(str)
+    #datasets['log_feature']['volume'] = pd.cut(datasets['log_feature']['volume'], bins=[0, 1, 2, 7, 1310], labels=[1, 2, 3, 4]).astype(str)
     for key, dataset in datasets.items():
         if key not in samples:
             join = pd.merge(join, dataset, on='id', how='inner')
@@ -73,15 +73,15 @@ def get_prior_features(join):
     ds=get_datasets()
 
     prior_col_names=['rt_f1','rt_f2','et_f1','et_f2','lf_f1','lf_f2','lf_f3','lf_f4','volume_y']
-    for cat in cat_cols:
-        if cat is not 'location':
-            df=pd.merge(ds['train'],ds[cat],on='id')
-            del df['id']
-            df.rename(columns={'fault_severity':(cat+'_prior')}, inplace=True)
-            prior_col_names.append(cat+'_prior')
-            dfg=df.groupby(['location',cat]).mean()
-            dfg.reset_index(inplace=True)
-            join=pd.merge(join,dfg,on=['location',cat],how='left')
+    #for cat in cat_cols:
+       # if cat is not 'location':
+            #df=pd.merge(ds['train'],ds[cat],on='id')
+            #del df['id']
+            #df.rename(columns={'fault_severity':(cat+'_prior')}, inplace=True)
+            #prior_col_names.append(cat+'_prior')
+            #dfg=df.groupby(['location',cat]).mean()
+            #dfg.reset_index(inplace=True)
+            #join=pd.merge(join,dfg,on=['location',cat],how='left')
 
 
     def rt_f1(x):
@@ -123,10 +123,10 @@ def get_prior_features(join):
 
     i1=ndf[ndf[0.0]==1.0].index
     i21=ndf[ndf[2.0]==0.0].index
-    i22=ndf[ndf[1.0]>=0.5].index
-    i3=ndf[ndf[2.0]>=0.5].index
+    i22=ndf[ndf[1.0]>=0.7].index
+    i3=ndf[ndf[2.0]>=0.7].index
     i41=ndf[ndf[2.0]>0.0].index
-    i42=ndf[ndf[2.0]<0.5].index
+    i42=ndf[ndf[2.0]<0.3].index
 
     def lf_f1(x):
         if x in i1:
@@ -163,9 +163,9 @@ def get_prior_features(join):
     prior_fs=prior_fs.groupby('id').mean()
     prior_fs=prior_fs.fillna(value=0)
     prior_fs['id']=prior_fs.index
-    for column in prior_fs.columns:
-        if column is not 'id':
-            prior_fs[column]=pre.scale(prior_fs[column])
+    #for column in prior_fs.columns:
+        #if column is not 'id':
+            #prior_fs[column]=pre.scale(prior_fs[column])
 
     return prior_fs
 
@@ -177,17 +177,17 @@ def get_stats_features(join):
 
     for column in cat_cols:
         df=pd.crosstab(join[column],join['fault_severity'])
-        df[column+'_sum']=df.sum(axis=1)
-        stat_col_names.append(column+'_sum')
-        df.columns=['0','1','2',column+'_sum']
+        #df[column+'_sum']=df.sum(axis=1)
+        #stat_col_names.append(column+'_sum')
+        df.columns=['0','1','2']
 
-        df[column+'_std']=df[['0','1','2']].std(axis=1)
-        stat_col_names.append(column+'_std')
+        #df[column+'_std']=df[['0','1','2']].std(axis=1)
+        #stat_col_names.append(column+'_std')
         f,_=chisquare(df[['0','1','2']],axis=1)
         df[column+'_pchisqr']=f
         stat_col_names.append(column+'_pchisqr')
 
-        fs=[column+'_sum',column+'_std',column+'_pchisqr']
+        fs=[column+'_pchisqr']#,column+'_std',column+'_sum']
         df=df[fs]
         df[column]=df.index
         dict_stats[column]=df
@@ -201,6 +201,9 @@ def get_stats_features(join):
     for column in stats.columns:
         if column is not 'id':
             stats[column]=pre.scale(stats[column])
-
+            med=stats[column].median()
+            mask=stats[column]<med
+            stats[column][mask]=0
+    
     return stats
 
